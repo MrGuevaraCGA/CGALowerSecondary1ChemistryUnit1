@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Science with Mr Guevara | Unit 1 Revision</title>
+    
+    <!-- ================================================================= -->
+    <!-- 👇👇👇 I HAVE PASTED YOUR KEY HERE FOR YOU 👇👇👇 -->
+    <script>
+        const MY_GOOGLE_API_KEY = "AIzaSyAY00ygk5lurFRr7UYz-o8N902_CbD_bHs"; 
+    </script>
+    <!-- ================================================================= -->
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -571,9 +579,20 @@
         });
 
         // --- GEMINI API INTEGRATION ---
-        const apiKey = ""; // System will provide key
+        
+        // This function retrieves the key we set at the top of the file
+        function getApiKey() {
+            if (typeof MY_GOOGLE_API_KEY !== 'undefined' && MY_GOOGLE_API_KEY !== "PASTE_YOUR_KEY_HERE") {
+                return MY_GOOGLE_API_KEY;
+            }
+            alert("⚠️ API KEY MISSING! \n\nPlease open index.html and paste your key at the very top of the file.");
+            return null;
+        }
 
         async function callGemini(prompt) {
+            const apiKey = getApiKey();
+            if (!apiKey) return "I can't think right now because my brain (API Key) is missing!";
+
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }]
@@ -718,7 +737,10 @@
 
             } catch (e) {
                 console.error("Quiz Gen Error:", e);
-                alert("Dr. Atom dropped the test tube! Try again.");
+                // Don't show alert if it was just the missing key, since getApiKey handles that
+                if (e.message !== "HTTP error! status: 400") { 
+                   // alert("Dr. Atom dropped the test tube! Try again.");
+                }
             } finally {
                 loading.classList.add('hidden');
                 btn.disabled = false;
