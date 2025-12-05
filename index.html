@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Science with Mr Guevara | Unit 1 Revision</title>
-    
-    <!-- ================================================================= -->
-    <!-- 👇👇👇 YOUR NEW API KEY IS SET HERE 👇👇👇 -->
-    <script>
-        const MY_GOOGLE_API_KEY = "AIzaSyD0XRjRQMDqKNug7tiS_5nP7IsukJ2DBZQ"; 
-    </script>
-    <!-- ================================================================= -->
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,8 +13,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <!-- AOS Animation Library -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- Markdown Parser -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <script>
         tailwind.config = {
@@ -112,19 +103,6 @@
             background: rgba(255, 255, 255, 0.1);
             animation: float 10s infinite;
         }
-
-        /* Chat Window Animations */
-        #ai-chat-window {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
-            transform-origin: bottom right;
-        }
-        .chat-message {
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
     </style>
 </head>
 <body class="font-body bg-gray-50 text-gray-800 overflow-x-hidden">
@@ -168,9 +146,6 @@
                 <a href="#matter" class="px-8 py-4 bg-cga-crimson text-white font-bold rounded-full hover:bg-red-700 transition-all hover:scale-105 shadow-lg shadow-red-900/50">
                     Start Learning <i class="fa-solid fa-arrow-right ml-2"></i>
                 </a>
-                <button onclick="toggleChat()" class="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold rounded-full hover:from-purple-700 hover:to-indigo-700 transition-all hover:scale-105 shadow-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-robot"></i> Ask Dr. Atom ✨
-                </button>
             </div>
         </div>
     </header>
@@ -476,18 +451,9 @@
                 <i class="fa-solid fa-brain text-6xl text-cga-gold mb-6 animate-pulse"></i>
                 <h2 class="font-heading text-4xl font-bold">Mr Guevara's Lab Challenge</h2>
                 <p class="mt-4 text-gray-300">Test your knowledge before the next class!</p>
-                <button onclick="generateAIQuestion()" id="gen-btn" class="mt-6 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full font-bold hover:shadow-lg hover:scale-105 transition-all text-white border-2 border-white/20">
-                    <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Generate Fresh Question ✨
-                </button>
             </div>
 
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl relative">
-                <!-- Loading Overlay -->
-                <div id="quiz-loading" class="hidden absolute inset-0 bg-cga-navy/80 rounded-2xl flex flex-col items-center justify-center z-20">
-                    <div class="w-12 h-12 border-4 border-cga-gold border-t-transparent rounded-full animate-spin mb-4"></div>
-                    <p class="text-cga-gold font-bold">Consulting Dr. Atom...</p>
-                </div>
-
                 <div id="quiz-container">
                     <!-- Static Question 1 -->
                     <div class="quiz-question mb-6">
@@ -499,13 +465,30 @@
                         </div>
                     </div>
 
-                    <!-- Dynamic Question Area -->
-                    <div id="dynamic-quiz-area"></div>
+                    <!-- Static Question 2 -->
+                    <div class="quiz-question mb-6 hidden">
+                        <p class="text-lg font-bold mb-4"><span class="text-cga-gold">Q2:</span> What type of change is melting ice?</p>
+                        <div class="space-y-3">
+                            <button onclick="checkAnswer(this, true)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">A) Physical Change</button>
+                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">B) Chemical Change</button>
+                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">C) Nuclear Change</button>
+                        </div>
+                    </div>
+
+                    <!-- Static Question 3 -->
+                    <div class="quiz-question mb-6 hidden">
+                        <p class="text-lg font-bold mb-4"><span class="text-cga-gold">Q3:</span> Which method separates sand and water?</p>
+                        <div class="space-y-3">
+                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">A) Magnetism</button>
+                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">B) Evaporation</button>
+                            <button onclick="checkAnswer(this, true)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">C) Filtration</button>
+                        </div>
+                    </div>
                     
                     <div id="quiz-result" class="hidden text-center pt-8 border-t border-white/10 mt-8">
                         <h3 class="text-3xl font-bold text-cga-gold mb-4">Great Job! 🎉</h3>
                         <p>You have completed the standard questions.</p>
-                        <button onclick="location.reload()" class="mt-6 px-6 py-2 bg-cga-crimson rounded-full font-bold hover:bg-red-600 transition-colors">Restart Standard Quiz</button>
+                        <button onclick="location.reload()" class="mt-6 px-6 py-2 bg-cga-crimson rounded-full font-bold hover:bg-red-600 transition-colors">Restart Quiz</button>
                     </div>
                 </div>
             </div>
@@ -524,52 +507,6 @@
         </div>
     </footer>
 
-    <!-- Dr. Atom Chat Interface -->
-    <!-- Floating Button (Desktop) -->
-    <div class="fixed bottom-8 right-8 z-50">
-        <button onclick="toggleChat()" class="w-16 h-16 bg-cga-crimson rounded-full shadow-2xl flex items-center justify-center text-white text-3xl hover:scale-110 transition-transform duration-300 border-4 border-white">
-            <i class="fa-solid fa-robot"></i>
-        </button>
-    </div>
-
-    <!-- Chat Window -->
-    <div id="ai-chat-window" class="fixed bottom-28 right-8 w-96 bg-white rounded-2xl shadow-2xl z-50 border border-gray-200 overflow-hidden hidden flex flex-col h-[500px]">
-        <!-- Header -->
-        <div class="bg-cga-navy p-4 flex justify-between items-center text-white">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-cga-navy font-bold text-xl">
-                    <i class="fa-solid fa-atom"></i>
-                </div>
-                <div>
-                    <h3 class="font-heading font-bold">Dr. Atom</h3>
-                    <p class="text-xs text-cga-gold">AI Lab Assistant ✨</p>
-                </div>
-            </div>
-            <button onclick="toggleChat()" class="text-white hover:text-cga-crimson transition-colors"><i class="fa-solid fa-times text-xl"></i></button>
-        </div>
-        
-        <!-- Messages Area -->
-        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto bg-gray-50 space-y-4">
-            <!-- Intro Message -->
-            <div class="flex gap-3">
-                <div class="w-8 h-8 bg-cga-navy rounded-full flex items-center justify-center text-white shrink-0 text-xs"><i class="fa-solid fa-robot"></i></div>
-                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-gray-700 border border-gray-100">
-                    Hello! I'm Dr. Atom. Ask me anything about matter, atoms, or separating mixtures! I can also explain things like I'm 5 years old. 🧪
-                </div>
-            </div>
-        </div>
-
-        <!-- Input Area -->
-        <div class="p-4 bg-white border-t border-gray-100">
-            <div class="flex gap-2">
-                <input type="text" id="chat-input" placeholder="Ask a question..." class="flex-1 px-4 py-2 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-cga-crimson" onkeypress="if(event.key === 'Enter') sendMessage()">
-                <button onclick="sendMessage()" class="w-10 h-10 bg-cga-crimson text-white rounded-full flex items-center justify-center hover:bg-red-700 transition-colors shadow-md">
-                    <i class="fa-solid fa-paper-plane text-sm"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- AOS Script -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
@@ -577,175 +514,6 @@
             duration: 800,
             once: true,
         });
-
-        // --- GEMINI API INTEGRATION ---
-        
-        // This function retrieves the key we set at the top of the file
-        function getApiKey() {
-            if (typeof MY_GOOGLE_API_KEY !== 'undefined' && MY_GOOGLE_API_KEY.includes("AIza")) {
-                return MY_GOOGLE_API_KEY;
-            }
-            alert("⚠️ API KEY MISSING! \n\nPlease open index.html and paste your key at the very top of the file.");
-            return null;
-        }
-
-        async function callGemini(prompt) {
-            const apiKey = getApiKey();
-            if (!apiKey) {
-                return "I can't think right now because my brain (API Key) is missing!";
-            }
-
-            // CORRECT API ENDPOINT: v1beta for gemini-1.5-flash
-            // Why? 'gemini-1.5-flash' is primarily supported on the beta endpoint for public keys
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }]
-            };
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-
-                if (!response.ok) {
-                    const errorMsg = data.error?.message || response.statusText;
-                    console.error("Gemini Error:", errorMsg);
-                    return `I'm having trouble connecting to my brain. Error: ${errorMsg}`;
-                }
-
-                return data.candidates?.[0]?.content?.parts?.[0]?.text || "No response text found.";
-            } catch (e) {
-                return `Network Error: ${e.message}`;
-            }
-        }
-
-        // --- CHATBOT LOGIC ---
-        function toggleChat() {
-            const chatWindow = document.getElementById('ai-chat-window');
-            if (chatWindow.classList.contains('hidden')) {
-                chatWindow.classList.remove('hidden');
-                setTimeout(() => { // Small delay for animation
-                    chatWindow.style.opacity = '1';
-                    chatWindow.style.transform = 'translateY(0) scale(1)';
-                }, 10);
-                document.getElementById('chat-input').focus();
-            } else {
-                chatWindow.style.opacity = '0';
-                chatWindow.style.transform = 'translateY(20px) scale(0.95)';
-                setTimeout(() => chatWindow.classList.add('hidden'), 300);
-            }
-        }
-
-        async function sendMessage() {
-            const input = document.getElementById('chat-input');
-            const message = input.value.trim();
-            const container = document.getElementById('chat-messages');
-
-            if (!message) return;
-
-            // User Message
-            container.innerHTML += `
-                <div class="flex gap-3 justify-end chat-message">
-                    <div class="bg-cga-navy text-white p-3 rounded-2xl rounded-tr-none shadow-md text-sm">
-                        ${message}
-                    </div>
-                </div>
-            `;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-
-            // Loading Indicator
-            const loadingId = 'loading-' + Date.now();
-            container.innerHTML += `
-                <div id="${loadingId}" class="flex gap-3 chat-message">
-                    <div class="w-8 h-8 bg-cga-navy rounded-full flex items-center justify-center text-white shrink-0 text-xs"><i class="fa-solid fa-robot"></i></div>
-                    <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm border border-gray-100 flex items-center gap-2">
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
-                        <div class="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
-                    </div>
-                </div>
-            `;
-            container.scrollTop = container.scrollHeight;
-
-            // System Prompt
-            const systemContext = "You are Dr. Atom, a friendly and enthusiastic lab assistant for Mr. Guevara's Middle School Science class. The topic is Unit 1: Matter, Mixtures, and Separation (Atoms, Protons, Neutrons, Electrons, Elements vs Compounds, Physical vs Chemical Changes, Sieving, Filtration, Evaporation). Keep answers short, fun, and use emojis. If asked to explain simply, use the 'Explain Like I'm 5' style with analogies (like Lego or cooking).";
-            
-            const fullPrompt = `${systemContext}\n\nStudent: ${message}\nDr. Atom:`;
-
-            // Call API
-            const responseText = await callGemini(fullPrompt);
-
-            // Remove Loading
-            const loader = document.getElementById(loadingId);
-            if(loader) loader.remove();
-
-            // AI Message (Render Markdown)
-            container.innerHTML += `
-                <div class="flex gap-3 chat-message">
-                    <div class="w-8 h-8 bg-cga-navy rounded-full flex items-center justify-center text-white shrink-0 text-xs"><i class="fa-solid fa-robot"></i></div>
-                    <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm text-sm text-gray-700 border border-gray-100 prose prose-sm">
-                        ${marked.parse(responseText)}
-                    </div>
-                </div>
-            `;
-            container.scrollTop = container.scrollHeight;
-        }
-
-        // --- INFINITE QUIZ GENERATOR LOGIC ---
-        async function generateAIQuestion() {
-            const loading = document.getElementById('quiz-loading');
-            const area = document.getElementById('dynamic-quiz-area');
-            const btn = document.getElementById('gen-btn');
-
-            loading.classList.remove('hidden');
-            btn.disabled = true;
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
-
-            const prompt = `Generate 1 multiple choice question about Matter, Atoms, Chemical Changes, or Separation Techniques for a middle school science student. 
-            Return ONLY raw JSON with this format: {"question": "text", "options": ["A", "B", "C"], "correctIndex": 0 (0-2)}. 
-            Make it fun and interesting. Do not include markdown formatting like \`\`\`json.`;
-
-            try {
-                let jsonStr = await callGemini(prompt);
-                // Clean up markdown if Gemini adds it despite instructions
-                jsonStr = jsonStr.replace(/```json/g, '').replace(/```/g, '').trim();
-                
-                const qData = JSON.parse(jsonStr);
-
-                const qHtml = `
-                    <div class="quiz-question mb-6 animate-pulse-fast" style="animation: fadeIn 0.5s ease forwards">
-                        <div class="flex justify-between items-center mb-4">
-                            <p class="text-lg font-bold"><span class="text-cga-gold"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Question:</span> ${qData.question}</p>
-                        </div>
-                        <div class="space-y-3">
-                            ${qData.options.map((opt, idx) => `
-                                <button onclick="checkAnswer(this, ${idx === qData.correctIndex})" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/10 hover:bg-white/20 transition-all border-2 border-white/10 backdrop-blur-sm shadow-lg font-semibold text-white">
-                                    ${String.fromCharCode(65+idx)}) ${opt}
-                                </button>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
-
-                // Insert at top of dynamic area
-                const div = document.createElement('div');
-                div.innerHTML = qHtml;
-                area.prepend(div);
-
-            } catch (e) {
-                console.error("Quiz Gen Error:", e);
-            } finally {
-                loading.classList.add('hidden');
-                btn.disabled = false;
-                btn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-        }
 
         // --- EXISTING UI LOGIC ---
         // State Switcher
@@ -829,10 +597,12 @@
             }
         }
 
-        // Check Answer
+        // Simple Quiz Logic with Multiple Questions
         function checkAnswer(btn, isCorrect) {
-            const parent = btn.parentElement;
-            const buttons = parent.getElementsByTagName('button');
+            const currentQ = btn.closest('.quiz-question');
+            const buttons = currentQ.getElementsByTagName('button');
+            
+            // Disable all buttons in this question
             for(let b of buttons) {
                 b.disabled = true;
                 if(b === btn) {
@@ -840,13 +610,28 @@
                         b.classList.remove('bg-white/5', 'bg-white/10');
                         b.classList.add('bg-green-500', 'text-white', 'border-green-400');
                         b.innerHTML += ' <i class="fa-solid fa-check ml-2"></i>';
-                        // Trigger confetti logic here if we had a library
                     } else {
                         b.classList.remove('bg-white/5', 'bg-white/10');
                         b.classList.add('bg-red-500', 'text-white', 'border-red-400');
                         b.innerHTML += ' <i class="fa-solid fa-xmark ml-2"></i>';
                     }
                 }
+            }
+
+            // Move to next question after delay if correct
+            if(isCorrect) {
+                setTimeout(() => {
+                    const nextQ = currentQ.nextElementSibling;
+                    currentQ.classList.add('hidden');
+                    
+                    if(nextQ && nextQ.classList.contains('quiz-question')) {
+                        nextQ.classList.remove('hidden');
+                        // Add fade in animation
+                        nextQ.style.animation = 'fadeIn 0.5s ease forwards';
+                    } else {
+                        document.getElementById('quiz-result').classList.remove('hidden');
+                    }
+                }, 1000);
             }
         }
     </script>
