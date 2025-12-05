@@ -455,41 +455,7 @@
 
             <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 shadow-2xl relative">
                 <div id="quiz-container">
-                    <!-- Static Question 1 -->
-                    <div class="quiz-question mb-6">
-                        <p class="text-lg font-bold mb-4"><span class="text-cga-gold">Q1:</span> Which of the following is NOT matter?</p>
-                        <div class="space-y-3">
-                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">A) Air</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">B) Light</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">C) Water</button>
-                        </div>
-                    </div>
-
-                    <!-- Static Question 2 -->
-                    <div class="quiz-question mb-6 hidden">
-                        <p class="text-lg font-bold mb-4"><span class="text-cga-gold">Q2:</span> What type of change is melting ice?</p>
-                        <div class="space-y-3">
-                            <button onclick="checkAnswer(this, true)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">A) Physical Change</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">B) Chemical Change</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">C) Nuclear Change</button>
-                        </div>
-                    </div>
-
-                    <!-- Static Question 3 -->
-                    <div class="quiz-question mb-6 hidden">
-                        <p class="text-lg font-bold mb-4"><span class="text-cga-gold">Q3:</span> Which method separates sand and water?</p>
-                        <div class="space-y-3">
-                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">A) Magnetism</button>
-                            <button onclick="checkAnswer(this, false)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">B) Evaporation</button>
-                            <button onclick="checkAnswer(this, true)" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">C) Filtration</button>
-                        </div>
-                    </div>
-                    
-                    <div id="quiz-result" class="hidden text-center pt-8 border-t border-white/10 mt-8">
-                        <h3 class="text-3xl font-bold text-cga-gold mb-4">Great Job! 🎉</h3>
-                        <p>You have completed the standard questions.</p>
-                        <button onclick="location.reload()" class="mt-6 px-6 py-2 bg-cga-crimson rounded-full font-bold hover:bg-red-600 transition-colors">Restart Quiz</button>
-                    </div>
+                    <!-- The questions will be dynamically loaded here -->
                 </div>
             </div>
         </div>
@@ -597,42 +563,116 @@
             }
         }
 
-        // Simple Quiz Logic with Multiple Questions
-        function checkAnswer(btn, isCorrect) {
-            const currentQ = btn.closest('.quiz-question');
-            const buttons = currentQ.getElementsByTagName('button');
+        // 30 Quiz Questions
+        const quizQuestions = [
+            { question: "Which of the following is NOT matter?", options: ["Air", "Light", "Water", "Rock"], correct: 1 },
+            { question: "What type of change is melting ice?", options: ["Physical Change", "Chemical Change", "Nuclear Change", "Biological Change"], correct: 0 },
+            { question: "Which method separates sand and water?", options: ["Magnetism", "Evaporation", "Filtration", "Freezing"], correct: 2 },
+            { question: "What is the smallest unit of matter?", options: ["Molecule", "Atom", "Compound", "Cell"], correct: 1 },
+            { question: "Which particle has a positive charge?", options: ["Electron", "Neutron", "Proton", "Photon"], correct: 2 },
+            { question: "Where are electrons located?", options: ["In the nucleus", "Inside protons", "Orbiting the nucleus", "Inside neutrons"], correct: 2 },
+            { question: "What charge does a neutron have?", options: ["Positive", "Negative", "Neutral (No charge)", "Variable"], correct: 2 },
+            { question: "H₂O (Water) is an example of what?", options: ["Element", "Atom", "Compound", "Mixture"], correct: 2 },
+            { question: "O₂ (Oxygen gas) is an example of what?", options: ["Compound", "Molecule", "Mixture", "Solution"], correct: 1 },
+            { question: "Which of these is a pure element?", options: ["Water", "Gold", "Salt", "Air"], correct: 1 },
+            { question: "In which state are particles packed tightly together?", options: ["Gas", "Liquid", "Solid", "Plasma"], correct: 2 },
+            { question: "Which state of matter fills the entire container?", options: ["Solid", "Liquid", "Gas", "Ice"], correct: 2 },
+            { question: "What happens to particles in a liquid?", options: ["They vibrate in place", "They slide past each other", "They fly apart quickly", "They stop moving"], correct: 1 },
+            { question: "What is the change from liquid to gas called?", options: ["Melting", "Freezing", "Evaporation", "Condensation"], correct: 2 },
+            { question: "What is the change from gas to liquid called?", options: ["Sublimation", "Evaporation", "Condensation", "Melting"], correct: 2 },
+            { question: "Burning wood is an example of what?", options: ["Physical Change", "Chemical Change", "Phase Change", "No Change"], correct: 1 },
+            { question: "Rusting iron is an example of what?", options: ["Chemical Change", "Physical Change", "Evaporation", "Filtration"], correct: 0 },
+            { question: "Tearing a piece of paper is what kind of change?", options: ["Chemical", "Physical", "Biological", "Atomic"], correct: 1 },
+            { question: "What is a sign of a chemical reaction?", options: ["Change in shape", "Melting", "Bubbles/Gas production", "Getting wet"], correct: 2 },
+            { question: "The Law of Conservation of Matter states that matter cannot be...", options: ["Seen", "Created or Destroyed", "Changed", "Moved"], correct: 1 },
+            { question: "If you burn a 5kg log, what is the mass of the ash + smoke?", options: ["Less than 5kg", "More than 5kg", "Exactly 5kg", "0kg"], correct: 2 },
+            { question: "Which of these is a heterogeneous mixture?", options: ["Salt water", "Air", "Pizza", "Pure gold"], correct: 2 },
+            { question: "Which of these is a homogeneous mixture (solution)?", options: ["Trail mix", "Sand and water", "Salt water", "Pizza"], correct: 2 },
+            { question: "Which method is best for separating salt from seawater?", options: ["Filtration", "Sieving", "Evaporation", "Magnetism"], correct: 2 },
+            { question: "How would you separate iron filings from sand?", options: ["Add water", "Use a magnet", "Heat it up", "Freeze it"], correct: 1 },
+            { question: "What tool is used for filtration?", options: ["Magnet", "Sieve", "Filter paper", "Bunsen burner"], correct: 2 },
+            { question: "Sieving is used to separate mixtures based on what property?", options: ["Color", "Size", "Magnetism", "Taste"], correct: 1 },
+            { question: "When salt dissolves in water, what is the mixture called?", options: ["Suspension", "Solution", "Compound", "Element"], correct: 1 },
+            { question: "Can you reverse a chemical change easily?", options: ["Yes, always", "No, usually not", "Only with a magnet", "Only by freezing"], correct: 1 },
+            { question: "What is the center of an atom called?", options: ["Shell", "Orbit", "Nucleus", "Proton"], correct: 2 }
+        ];
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            let html = '';
             
-            // Disable all buttons in this question
+            quizQuestions.forEach((q, index) => {
+                const hiddenClass = index === 0 ? '' : 'hidden';
+                html += `
+                    <div class="quiz-question mb-6 ${hiddenClass}" id="q-${index}">
+                        <p class="text-lg font-bold mb-4"><span class="text-cga-gold">Q${index + 1}:</span> ${q.question}</p>
+                        <div class="space-y-3">
+                            ${q.options.map((opt, i) => `
+                                <button onclick="checkAnswer(this, ${i === q.correct}, ${index})" class="quiz-btn w-full text-left p-4 rounded-lg bg-white/5 hover:bg-white/20 transition-all border border-transparent">
+                                    ${String.fromCharCode(65+i)}) ${opt}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                <div id="quiz-result" class="hidden text-center pt-8 border-t border-white/10 mt-8">
+                    <h3 class="text-3xl font-bold text-cga-gold mb-4">Great Job! 🎉</h3>
+                    <p>You have completed all 30 questions!</p>
+                    <button onclick="location.reload()" class="mt-6 px-6 py-2 bg-cga-crimson rounded-full font-bold hover:bg-red-600 transition-colors">Restart Quiz</button>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Initialize Quiz
+        renderQuiz();
+
+        // Updated Check Answer Logic
+        function checkAnswer(btn, isCorrect, qIndex) {
+            const currentQ = document.getElementById(`q-${qIndex}`);
+            const buttons = currentQ.getElementsByTagName('button');
+            const correctIndex = quizQuestions[qIndex].correct; // Access the global array to find the right answer
+            
+            // Disable all buttons immediately
             for(let b of buttons) {
                 b.disabled = true;
-                if(b === btn) {
-                    if(isCorrect) {
-                        b.classList.remove('bg-white/5', 'bg-white/10');
-                        b.classList.add('bg-green-500', 'text-white', 'border-green-400');
-                        b.innerHTML += ' <i class="fa-solid fa-check ml-2"></i>';
-                    } else {
-                        b.classList.remove('bg-white/5', 'bg-white/10');
-                        b.classList.add('bg-red-500', 'text-white', 'border-red-400');
-                        b.innerHTML += ' <i class="fa-solid fa-xmark ml-2"></i>';
-                    }
+            }
+
+            // Style the clicked button
+            if(isCorrect) {
+                btn.classList.remove('bg-white/5', 'bg-white/10');
+                btn.classList.add('bg-green-500', 'text-white', 'border-green-400');
+                btn.innerHTML += ' <i class="fa-solid fa-check ml-2"></i>';
+            } else {
+                btn.classList.remove('bg-white/5', 'bg-white/10');
+                btn.classList.add('bg-red-500', 'text-white', 'border-red-400');
+                btn.innerHTML += ' <i class="fa-solid fa-xmark ml-2"></i>';
+                
+                // Highlight the correct answer if the user was wrong
+                const correctBtn = buttons[correctIndex];
+                if(correctBtn) {
+                    correctBtn.classList.remove('bg-white/5', 'bg-white/10');
+                    correctBtn.classList.add('bg-green-600', 'text-white', 'border-green-500', 'opacity-75'); // Slightly different style or just green
+                    correctBtn.innerHTML += ' <i class="fa-solid fa-check ml-2"></i> (Correct Answer)';
                 }
             }
 
-            // Move to next question after delay if correct
-            if(isCorrect) {
-                setTimeout(() => {
-                    const nextQ = currentQ.nextElementSibling;
-                    currentQ.classList.add('hidden');
-                    
-                    if(nextQ && nextQ.classList.contains('quiz-question')) {
-                        nextQ.classList.remove('hidden');
-                        // Add fade in animation
-                        nextQ.style.animation = 'fadeIn 0.5s ease forwards';
-                    } else {
-                        document.getElementById('quiz-result').classList.remove('hidden');
-                    }
-                }, 1000);
-            }
+            // Auto-advance regardless of answer (after delay)
+            setTimeout(() => {
+                currentQ.classList.add('hidden');
+                const nextQ = document.getElementById(`q-${qIndex + 1}`);
+                if(nextQ) {
+                    nextQ.classList.remove('hidden');
+                    nextQ.classList.add('animate-pulse-fast');
+                    setTimeout(() => nextQ.classList.remove('animate-pulse-fast'), 500);
+                } else {
+                    document.getElementById('quiz-result').classList.remove('hidden');
+                }
+            }, 2000); // Increased delay to 2s so they can read the correction
         }
     </script>
 </body>
