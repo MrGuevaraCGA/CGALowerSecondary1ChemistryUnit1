@@ -6,7 +6,7 @@
     <title>Science with Mr Guevara | Unit 1 Revision</title>
     
     <!-- ================================================================= -->
-    <!-- 👇👇👇 I HAVE PASTED YOUR KEY HERE FOR YOU 👇👇👇 -->
+    <!-- 👇👇👇 YOUR API KEY IS ALREADY HERE 👇👇👇 -->
     <script>
         const MY_GOOGLE_API_KEY = "AIzaSyAY00ygk5lurFRr7UYz-o8N902_CbD_bHs"; 
     </script>
@@ -593,7 +593,8 @@
             const apiKey = getApiKey();
             if (!apiKey) return "I can't think right now because my brain (API Key) is missing!";
 
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // CHANGED: Using a standard, publicly available model (gemini-1.5-flash) instead of the preview one
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }]
             };
@@ -608,13 +609,20 @@
                         body: JSON.stringify(payload)
                     });
 
-                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    // NEW DEBUGGING LOGIC: Alert exact error if it fails
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error("Gemini API Error:", errorData);
+                        alert(`🤖 Dr. Atom Error:\n${errorData.error.message || response.statusText}`);
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
                     
                     const data = await response.json();
                     return data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm having trouble thinking right now. Try again!";
                 } catch (error) {
                     if (i === delays.length) {
                         console.error('Max retries reached', error);
+                        // Only return generic error if we haven't alerted a specific one
                         return "I'm currently unreachable. Please check your connection.";
                     }
                     await new Promise(resolve => setTimeout(resolve, delays[i]));
