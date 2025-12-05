@@ -593,15 +593,17 @@
             const apiKey = getApiKey();
             if (!apiKey) return "I can't think right now because my brain (API Key) is missing!";
 
-            // CHANGED: Using a standard, publicly available model (gemini-1.5-flash) instead of the preview one
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }]
-            };
+            // CHANGED: Using a smarter "Try this, then try that" approach
+            const modelsToTry = [
+                "gemini-1.5-flash-latest",
+                "gemini-1.5-flash",
+                "gemini-1.0-pro"
+            ];
 
-            // Exponential backoff retry logic
-            const delays = [1000, 2000, 4000, 8000, 16000];
-            for (let i = 0; i < delays.length + 1; i++) {
+            for (const model of modelsToTry) {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+                const payload = { contents: [{ parts: [{ text: prompt }] }] };
+
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
@@ -609,25 +611,30 @@
                         body: JSON.stringify(payload)
                     });
 
-                    // NEW DEBUGGING LOGIC: Alert exact error if it fails
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error("Gemini API Error:", errorData);
-                        alert(`🤖 Dr. Atom Error:\n${errorData.error.message || response.statusText}`);
-                        throw new Error(`HTTP error! status: ${response.status}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm having trouble thinking right now. Try again!";
                     }
                     
-                    const data = await response.json();
-                    return data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm having trouble thinking right now. Try again!";
-                } catch (error) {
-                    if (i === delays.length) {
-                        console.error('Max retries reached', error);
-                        // Only return generic error if we haven't alerted a specific one
-                        return "I'm currently unreachable. Please check your connection.";
+                    // If we get "Model not found" (404), continue to the next model in the list
+                    if (response.status === 404) {
+                        console.log(`Model ${model} not found, trying next...`);
+                        continue;
                     }
-                    await new Promise(resolve => setTimeout(resolve, delays[i]));
+
+                    // For other errors (like Quota), stop and show error
+                    const errorData = await response.json();
+                    console.error("Gemini API Error:", errorData);
+                    alert(`🤖 Dr. Atom Error:\n${errorData.error.message || response.statusText}`);
+                    return "I'm currently unreachable. Please check your connection.";
+
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    continue; // Try next model on network error
                 }
             }
+            
+            return "I couldn't connect to any of my brains! Please check your API key.";
         }
 
         // --- CHATBOT LOGIC ---
@@ -688,7 +695,8 @@
             const responseText = await callGemini(fullPrompt);
 
             // Remove Loading
-            document.getElementById(loadingId).remove();
+            const loader = document.getElementById(loadingId);
+            if(loader) loader.remove();
 
             // AI Message (Render Markdown)
             container.innerHTML += `
